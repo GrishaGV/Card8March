@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>С праздником, контролёр! (iPhone SE)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #2d2f33;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 12px 8px;
+        }
+
+        .newspaper {
+            max-width: 1000px;
+            width: 100%;
+            background: #f5ede1;
+            background-image: 
+                linear-gradient(rgba(150, 130, 100, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(150, 130, 100, 0.08) 1px, transparent 1px);
+            background-size: 25px 25px;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.7), 0 0 0 2px #6b5a4b, 0 0 0 6px #b8a692;
+            padding: 20px 15px 25px 15px;
+            border-radius: 4px;
+            position: relative;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #b34b4b, #e07a7a, #b34b4b, transparent);
+            border-radius: 4px;
+        }
+
+        /* Мини-плеер Queen  */
+        .queen-player {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(30, 30, 30, 0.75);
+            backdrop-filter: blur(4px);
+            border: 2px solid #b89a7a;
+            border-radius: 60px;
+            padding: 6px 15px 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            color: #f0dab6;
+            box-shadow: 0 4px 10px black;
+            z-index: 10;
+            transition: 0.3s;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        .queen-player:hover {
+            background: rgba(50, 30, 30, 0.9);
+            border-color: #e4b181;
+            box-shadow: 0 0 15px #fabb7c;
+        }
+        .queen-player audio {
+            width: 140px;
+            height: 30px;
+            border-radius: 30px;
+            outline: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .queen-player audio:hover {
+            opacity: 1;
+        }
+        .queen-player span {
+            text-transform: uppercase;
+            font-size: 14px;
+            background: #952b2b;
+            padding: 4px 8px;
+            border-radius: 40px;
+            border: 1px solid #cf9f6e;
+        }
+
+        .tulip-garland {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 5px;
+            flex-wrap: wrap;
+            padding: 3px 0;
+        }
+
+        .tulip {
+            font-size: 24px;
+            line-height: 1;
+            display: inline-block;
+            animation: tulipWave 2.5s infinite ease-in-out;
+            filter: drop-shadow(0 4px 6px rgba(180, 70, 70, 0.3));
+            transform-origin: bottom center;
+        }
+
+        .tulip:nth-child(1) { animation-delay: 0s; }
+        .tulip:nth-child(2) { animation-delay: 0.2s; }
+        .tulip:nth-child(3) { animation-delay: 0.4s; }
+        .tulip:nth-child(4) { animation-delay: 0.1s; }
+        .tulip:nth-child(5) { animation-delay: 0.5s; }
+        .tulip:nth-child(6) { animation-delay: 0.3s; }
+        .tulip:nth-child(7) { animation-delay: 0.6s; }
+        .tulip:nth-child(8) { animation-delay: 0.15s; }
+        .tulip:nth-child(9) { animation-delay: 0.45s; }
+        .tulip:nth-child(10) { animation-delay: 0.25s; }
+        .tulip:nth-child(11) { animation-delay: 0.55s; }
+        .tulip:nth-child(12) { animation-delay: 0.35s; }
+
+        @keyframes tulipWave {
+            0%, 100% { 
+                transform: rotate(0deg) translateY(0); 
+                filter: drop-shadow(0 4px 6px rgba(180, 70, 70, 0.3));
+            }
+            25% { 
+                transform: rotate(-8deg) translateY(-6px); 
+                filter: drop-shadow(0 8px 8px rgba(200, 80, 80, 0.5));
+            }
+            75% { 
+                transform: rotate(8deg) translateY(-4px); 
+                filter: drop-shadow(0 8px 8px rgba(200, 80, 80, 0.5));
+            }
+        }
+
+        .main-title {
+            margin-bottom: 10px;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            text-align: center;
+            color: #a1232f;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.1;
+            text-shadow: 
+                3px 3px 0 #efdbb0,
+                5px 5px 0 rgba(0,0,0,0.15);
+            word-break: break-word;
+            animation: titlePulse 3s infinite ease-in-out;
+            transform-origin: center;
+        }
+
+        @keyframes titlePulse {
+            0% { text-shadow: 3px 3px 0 #efdbb0, 5px 5px 0 rgba(0,0,0,0.15); }
+            50% { text-shadow: 5px 5px 0 #efdbb0, 7px 7px 0 rgba(0,0,0,0.2); color: #b82b3a; }
+            100% { text-shadow: 3px 3px 0 #efdbb0, 5px 5px 0 rgba(0,0,0,0.15); }
+        }
+
+        .sub-header {
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-top: 3px double #6b4f3a;
+            border-bottom: 3px double #6b4f3a;
+            padding: 6px 0;
+            margin: 8px 0 18px 0;
+            color: #2f2b25;
+            letter-spacing: 2px;
+            background: rgba(180, 150, 120, 0.15);
+            transition: background 0.4s, letter-spacing 0.3s;
+        }
+        .sub-header:hover {
+            background: rgba(200, 170, 130, 0.4);
+            letter-spacing: 4px;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .poetry-col {
+            background: rgba(235, 220, 200, 0.5);
+            padding: 12px 15px;
+            border-left: 6px solid #b1624b;
+            border-bottom: 2px solid #b8a282;
+            box-shadow: inset 0 0 15px #cabfab;
+            transition: box-shadow 0.4s, border-left-color 0.3s;
+        }
+        .poetry-col:hover {
+            box-shadow: inset 0 0 25px #bd9f7a, 0 8px 12px rgba(0,0,0,0.2);
+            border-left-color: #d43f1a;
+        }
+
+        .poetry-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: #6b2e1f;
+            text-transform: uppercase;
+            border-bottom: 2px dashed #a5613f;
+            margin-bottom: 12px;
+            font-family: 'Impact', sans-serif;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .poetry-title:hover {
+            transform: skewX(-3deg) scale(1.02);
+            color: #984a32;
+        }
+
+        .poetry {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #1e1b16;
+            white-space: normal;
+            font-weight: 600;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .poetry p {
+            margin: 20px 0;
+            transition: color 0.3s, padding-left 0.3s;
+            background-color: rgba(255, 240, 220, 0.3);
+            padding: 8px 10px;
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+        }
+        .poetry p:hover {
+            color: #402d1b;
+            padding-left: 15px;
+            border-left: 4px solid #b1624b;
+            background-color: rgba(235, 205, 170, 0.5);
+        }
+
+        .separator {
+            text-align: center;
+            font-size: 22px;
+            letter-spacing: 8px;
+            color: #a04830;
+            font-weight: bold;
+            margin: 10px 0;
+            animation: blinkSeparator 2.5s infinite;
+        }
+        @keyframes blinkSeparator {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; letter-spacing: 12px; color: #c06a4a; }
+            100% { opacity: 1; }
+        }
+
+        .extra-col {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .card {
+            background: #e3d5c0;
+            border: 3px double #6f523b;
+            padding: 12px 15px;
+            box-shadow: 5px 5px 0 #896b51;
+            transition: transform 0.25s ease, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 8px 10px 0 #6f4f38;
+        }
+
+        .card-title {
+            font-family: 'Impact', sans-serif;
+            font-size: 22px;
+            color: #2d4b3a;
+            text-transform: uppercase;
+            border-bottom: 2px solid #a76747;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-title span {
+            font-size: 24px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        .card-title span:hover {
+            transform: rotate(15deg) scale(1.2);
+        }
+
+        .news-item {
+            margin-bottom: 12px;
+            border-left: 4px solid #b34b4b;
+            padding-left: 10px;
+            transition: border-left-color 0.2s, background 0.2s;
+        }
+        .news-item:hover {
+            border-left-color: #e6735c;
+            background: rgba(200, 160, 130, 0.2);
+        }
+
+        .news-item strong {
+            font-size: 18px;
+            color: #3f2c1c;
+            text-transform: uppercase;
+            display: block;
+        }
+
+        .news-item p {
+            font-size: 16px;
+            margin-top: 4px;
+            line-height: 1.4;
+            font-family: 'Courier New', monospace;
+        }
+
+        .fact-list {
+            list-style: none;
+        }
+        .fact-list li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding-left: 24px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .fact-list li:hover {
+            transform: translateX(5px);
+            color: #2a4450;
+            font-weight: 500;
+        }
+        .fact-list li::before {
+            content: "⚙";
+            position: absolute;
+            left: 0;
+            color: #a2412b;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+        .fact-list li:hover::before {
+            transform: rotate(40deg) scale(1.2);
+            color: #c95a2b;
+        }
+
+        .humor {
+            background: #d1c2ab;
+            padding: 12px;
+            font-style: italic;
+            border-radius: 0 16px 0 16px;
+            border: 2px solid #8e5c41;
+            font-size: 17px;
+            box-shadow: inset 0 0 0 2px #f2e5d2;
+            transition: border-radius 0.4s, background 0.3s;
+        }
+        .humor:hover {
+            border-radius: 16px 0 16px 0;
+            background: #cfbb9c;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .humor-text {
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 18px;
+            color: #2c3e2b;
+        }
+
+        .history-block {
+            font-family: 'Courier New', monospace;
+            background: #cabfaa;
+            border: 4px double #632f1d;
+            padding: 14px 18px;
+            margin: 12px 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s, border-color 0.3s;
+            animation: historyGlow 4s infinite alternate;
+        }
+        @keyframes historyGlow {
+            0% { border-color: #632f1d; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+            100% { border-color: #b6794b; box-shadow: 0 8px 18px #a1552e, 0 0 0 2px #b88a61; }
+        }
+
+        .history-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #2f1d14;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.1;
+            border-right: 4px solid #aa412b;
+            padding-right: 18px;
+            margin-right: 10px;
+            flex: 1 1 auto;
+            text-shadow: 2px 2px 0px #b88a61;
+            transition: text-shadow 0.3s;
+        }
+        .history-title:hover {
+            text-shadow: 4px 4px 0 #c79f72, 6px 6px 0 #613f25;
+        }
+
+        .history-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #213b28;
+            text-transform: uppercase;
+            background: #eadbc2;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 2px solid #a1532f;
+            letter-spacing: 1px;
+            box-shadow: inset 0 -3px 0 #7c4f2e;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .history-text:hover {
+            background: #ffeaca;
+            transform: scale(1.02);
+            border-color: #d46b32;
+        }
+
+        .tools {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0 5px;
+            color: #3a2c1e;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: rgba(140, 110, 70, 0.18);
+            padding: 8px;
+            border-radius: 40px;
+            border: 1px solid #946e51;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tools span {
+            background: #b69066;
+            color: #1a140f;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-family: 'Impact', sans-serif;
+            box-shadow: 0 3px 0 #4f3d2e;
+            transition: all 0.25s;
+            display: inline-block;
+            cursor: default;
+        }
+        .tools span:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 #3e2e1f, 0 8px 10px #241a11;
+            background: #c9a075;
+            color: #fbf2dd;
+        }
+
+        .footer-slogan {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            color: #3f3022;
+            border-top: 1px solid #ab8f76;
+            padding-top: 12px;
+            margin-top: 16px;
+            font-family: 'Times New Roman', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            background: #9c2626;
+            color: #f0e1c0;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 14px;
+            transform: rotate(-1deg);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .badge:hover {
+            transform: rotate(2deg) scale(1.1);
+            background: #bd3a3a;
+            box-shadow: 0 0 8px #f3c26b;
+        }
+
+        .bottom-note {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-top: 12px;
+            color: #7a624b;
+            border-top: 1px dotted #b38f6e;
+            padding-top: 6px;
+            transition: color 0.3s;
+        }
+        .bottom-note span {
+            transition: all 0.2s;
+        }
+        .bottom-note span:hover {
+            color: #442f1f;
+            text-shadow: 0 0 4px #dbb682;
+            font-weight: bold;
+        }
+
+        .corner-tulip {
+            display: none;
+        }
+
+        @media (max-width: 680px) {
+            .two-columns { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+            }
+            .main-title { 
+                font-size: 32px; 
+            }
+            .history-title { 
+                font-size: 24px; 
+                border-right: none; 
+                padding-right: 0;
+                text-align: center;
+            }
+            .tulip { 
+                font-size: 17px; 
+            }
+            .sub-header {
+                font-size: 16px;
+                letter-spacing: 1px;
+            }
+            .history-block {
+                flex-direction: column;
+                text-align: center;
+            }
+            .history-text {
+                white-space: normal;
+                font-size: 18px;
+            }
+            .footer-slogan {
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+            }
+            .poetry {
+                font-size: 21px;
+            }
+            .poetry p {
+                padding: 10px 12px;
+            }
+            .queen-player {
+                top: -25px;
+                right: -30px;
+                padding: 4px 8px;
+            }
+            .queen-player audio {
+                width: 110px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .newspaper {
+                padding: 15px 10px;
+            }
+            .main-title {
+                font-size: 28px;
+            }
+            .poetry-title {
+                font-size: 22px;
+            }
+            .poetry {
+                font-size: 17px;
+            }
+            .tools span {
+                font-size: 14px;
+                padding: 4px 10px;
+            }
+            .card-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="newspaper">
+    <!--  -->
+    <div class="queen-player">
+        <span>🎸ЖМИ&#10145;</span>
+        <audio controls autoplay loop>
+            <source src="play.mp3" type="audio/mpeg">
+            <!--  -->
+        </audio>
+    </div>
+
+    <div class="corner-tulip corner-tulip-left"></div>
+    <div class="corner-tulip corner-tulip-right"></div>
+
+    <div class="tulip-garland">
+        <span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span>
+        <span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span>
+    </div>
+
+    <div class="main-title">
+        С ПРАЗДНИКОМ ВЕСНЫ,<br> СВОБОДЫ И РАВЕНСТВА
+    </div>
+
+    <div class="tulip-garland" style="margin-top: 3px;">
+        <span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span>
+        <span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span><span class="tulip">🌷</span>
+    </div>
+
+    <div class="sub-header">
+        ⚙︎ ГИМН КОНТРОЛЁРУ! ⚙︎  •  МАРТ 2026  •  СПЕЦВЫПУСК
+    </div>
+
+    <div class="two-columns">
+        <div class="poetry-col">
+            <div class="poetry-title">♪ ГИМН КОНТРОЛЁРУ ♪</div>
+            <div class="poetry">
+                <p><strong>В РУКАХ — КАЛИБР,<br>В ГЛАЗАХ — ЧЕРТЁЖ.<br>ЖЁСТКИЙ НАДЗОР ВЕДЁТ<br>КОНТРОЛЁР СЛЕСАРНЫХ РАБОТ.</strong></p>
+                <div class="separator">✻ ✻ ✻</div>
+                <p><strong>НЕ ПРОПУСТИТ НИ МИКРОН,<br>НИ УКЛОН, НИ ПЕРЕКОС.<br>КАЖДЫЙ РАЗМЕР — ПОД ЗАМКОМ,<br>КАЖДЫЙ СТЫК — НА ВОПРОС.</strong></p>
+                <div class="separator">✻ ✻ ✻</div>
+                <p><strong>СТАНОК ГУДИТ, МЕТАЛЛ ПОЁТ,<br>А ОНА — КАК СТРОГИЙ ЗАКОН:<br>ГДЕ НЕ ТАК — ТУТ ЖЕ НАЙДЁТ,<br>ГДЕ ЧУТЬ ВБОК — ТУТ ЖЕ ПОЙМЁТ.</strong></p>
+                <div class="separator">✻ ✻ ✻</div>
+                <p><strong>В ЦЕХЕ ТИХО, НО НЕ ЗРЯ —<br>ЗА ПОРЯДКОМ СМОТРИТ ОНА.<br>В РУКАХ — КАЛИБР,<br>В ГЛАЗАХ — ЧЕРТЁЖ,<br>КОРНЕВУЮ ПРИЧИНУ НАЙДЁТ!<br>КОНТРОЛЁР СЛЕСАРНЫХ РАБОТ!</strong></p>
+            </div>
+            <div style="text-align: right; font-size: 15px; margin-top: 8px; color: #8b6748;">от авторов цеха №101</div>
+        </div>
+
+        <div class="extra-col">
+            <div class="card">
+                <div class="card-title"><span>🏅</span> ЛУЧШИЕ КОНТРОЛЁРЫ</div>
+                <div class="news-item">
+                    <strong>ПОЛИНА СТРОГАЯ:</strong>
+                    <p>20 лет без брака! Её девиз: «Микрон — не мелочь». За прошлый месяц предотвратила выпуск 150 деталей с отклонениями. Гордость цеха!</p>
+                </div>
+                <div class="news-item">
+                    <strong>СВЕТЛАНА ТОЧНАЯ:</strong>
+                    <p>Изобрела новый способ быстрой проверки допусков. Внесено в рацпредложения завода.</p>
+                </div>
+                <div class="news-item">
+                    <strong>И ЕЩЕ МНОГО КЛАССНЫХ СОВЕТСКИХ ДЕВЧОНОК</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span>🔍</span> 5 ФАКТОВ О КОНТРОЛЕ</div>
+                <ul class="fact-list">
+                    <li><strong>Точность — вежливость королей:</strong> допуск в 0.01 мм в 10 раз тоньше человеческого волоса.</li>
+                    <li><strong>Женщины-контролёры</strong> составляют 80% профессии — их внимательность легендарна.</li>
+                    <li><strong>Калибр-скоба</strong> — главный инструмент, не прощает ошибок.</li>
+                    <li><strong>Контролёр видит чертёж</strong> насквозь: может предсказать, где возникнет дефект.</li>
+                    <li><strong>Профессия в почёте</strong> с 1930-х годов, когда заводы СССР набирали силу.</li>
+                </ul>
+            </div>
+
+            <div class="humor">
+                <div style="font-size: 24px; color: #904a30;">⚒️</div>
+                <div class="humor-text">ЧАСТУШКА ОТ ТОКАРЯ:</div>
+                <div style="margin-top: 8px;">
+                    «Контролёрша — глаз-алмаз,<br>
+                    не пропустит брак у нас.<br>
+                    Чуть размер ушёл влево&#x301; —<br>
+                    переделывать его&#x301;!»
+                </div>
+            </div>
+
+            <div style="background: #bdaF95; padding: 10px; border-left: 6px solid #9d442b; transition: 0.2s;">
+                <span style="font-weight: bold; font-size: 20px;">⚡ ПОЗДРАВЛЯЮТ СЛЕСАРИ:</span>
+                <p style="font-size: 17px; margin-top: 4px;">«Спасибо за зоркий глаз! Без вас — как без рук. С праздником, наши строгие музы!»</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-block">
+        <div class="history-title">
+            ИСТОРИЯ ЖЕНСКОЙ СИЛЫ
+        </div>
+        <div class="history-text">
+            ⚡ 8 МАРТА — ПРАЗДНИК ТОЧНОСТИ ⚡
+        </div>
+    </div>
+
+    <div class="tools">
+        <span>◈ КАЛИБР 0.02 ◈</span>
+        <span>◈ ЧЕРТЁЖ А1 ◈</span>
+        <span>◈ ДОПУСК H7 ◈</span>
+        <span>◈ МИКРОН ◈</span>
+    </div>
+
+    <div class="footer-slogan">
+        <span>№ 1 (256) • МАРТ 2026 • ЦЕХОВАЯ ПРАВДА</span>
+        <span class="badge">С ТОЧНОСТЬЮ — В БУДУЩЕЕ!</span>
+    </div>
+
+    <div class="bottom-note">
+        <span>✧ По заветам Клары Цеткин и Розы Люксембург ✧</span>
+        <span>✧ С праздником! ✧</span>
+    </div>
+</div>
+
+<!-- Чтобы autoplay сработал в некоторых браузерах, добавлена тихая инициализация через скрипт (на всякий случай) -->
+<script>
+    (function(){
+        // 
+        const audioEl = document.querySelector('.queen-player audio');
+        if (audioEl) {
+            // попытка воспроизведения
+            const playPromise = audioEl.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // авто-воспроизведение заблокировано — оставляем контролы, пусть пользователь нажмёт
+                    console.log("autoplay blocked, user must click play");
+                });
+            }
+        }
+    })();
+</script>
+
+</body>
+</html>
