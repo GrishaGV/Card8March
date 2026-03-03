@@ -720,20 +720,38 @@
     </div>
 </div>
 
-<!-- Чтобы autoplay сработал в некоторых браузерах, добавлена тихая инициализация через скрипт (на всякий случай) -->
 <script>
     (function(){
-        // 
         const audioEl = document.querySelector('.queen-player audio');
-        if (audioEl) {
-            // попытка воспроизведения
+        if (!audioEl) return;
+
+        // Функция для попытки воспроизведения
+        const playAudio = () => {
             const playPromise = audioEl.play();
             if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // авто-воспроизведение заблокировано — оставляем контролы, пусть пользователь нажмёт
-                    console.log("autoplay blocked, user must click play");
-                });
+                playPromise
+                    .then(() => {
+                        // Убираем обработчики после успешного запуска
+                        document.removeEventListener('touchstart', playAudio);
+                        document.removeEventListener('click', playAudio);
+                        console.log('Музыка заиграла!');
+                    })
+                    .catch(error => {
+                        console.log('Не удалось воспроизвести:', error);
+                    });
             }
+        };
+
+        // Вешаем события на первое касание или клик
+        document.addEventListener('touchstart', playAudio, { once: true });
+        document.addEventListener('click', playAudio, { once: true });
+
+        // Небольшая хитрость: если пользователь уже где-то кликнул до загрузки скрипта,
+        // пробуем запустить сразу (редко, но бывает)
+        if ('mediaSession' in navigator) { // Просто проверка, что браузер активен
+            setTimeout(() => {
+                // Пробуем запустить через 0.5 сек, если вдруг событие уже было
+            }, 500);
         }
     })();
 </script>
